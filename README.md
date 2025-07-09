@@ -1,84 +1,57 @@
-# This is my package livewire-select
+# Livewire Select Component
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/mountainclans/livewire-select.svg?style=flat-square)](https://packagist.org/packages/mountainclans/livewire-select)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/mountainclans/livewire-select/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/mountainclans/livewire-select/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/mountainclans/livewire-select/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/mountainclans/livewire-select/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/mountainclans/livewire-select.svg?style=flat-square)](https://packagist.org/packages/mountainclans/livewire-select)
+## Установка
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/livewire-select.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/livewire-select)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
-
-## Installation
-
-You can install the package via composer:
+Установите пакет с помощью Composer:
 
 ```bash
 composer require mountainclans/livewire-select
 ```
 
-You can publish and run the migrations with:
+Добавьте в файл проекта `resources/js/app.js` строки
 
-```bash
-php artisan vendor:publish --tag="livewire-select-migrations"
-php artisan migrate
+```js
+import selectComponent from '../../vendor/mountainclans/livewire-select/resources/js/searchSelect';
+Alpine.data('selectComponent', selectComponent);
 ```
 
-You can publish the config file with:
+Добавьте в файл проекта `resources/js/app.css` строки:
 
-```bash
-php artisan vendor:publish --tag="livewire-select-config"
+```
+@import '../../vendor/mountainclans/livewire-select/resources/css/searchSelect.css';
 ```
 
-This is the contents of the published config file:
+_Обратите внимание, что для корректной стилизации в вашем проекте должен использоваться TailwindCSS._
 
-```php
-return [
-];
+Добавьте в `tailwind.config.js` в секцию `content`:
+
+```js
+'./vendor/mountainclans/livewire-select/resources/views/**/*.blade.php'
 ```
 
-Optionally, you can publish the views using
+---
+
+Опционально, Вы можете опубликовать `views` для их переопределения:
 
 ```bash
 php artisan vendor:publish --tag="livewire-select-views"
 ```
 
-## Usage
+## Использование
 
-```php
-$livewireSelect = new MountainClans\LivewireSelect();
-echo $livewireSelect->echoPhrase('Hello, MountainClans!');
+```bladehtml
+
 ```
 
-## Testing
-
-```bash
-composer test
-```
-
-## Changelog
+## Изменения
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
-## Credits
+## Авторы
 
 - [Vladimir Bajenov](https://github.com/mountainclans)
 - [All Contributors](../../contributors)
 
-## License
+## Лицензия
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
