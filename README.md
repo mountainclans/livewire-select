@@ -30,7 +30,6 @@ _Обратите внимание, что для корректной стил�
 ```
 
 ---
-
 Опционально, Вы можете опубликовать `views` для их переопределения:
 
 ```bash
@@ -39,13 +38,62 @@ php artisan vendor:publish --tag="livewire-select-views"
 
 ## Использование
 
-```bladehtml
+### Простое использование
 
+```bladehtml
+<x-ui.select wire:model="modelId"
+             :hide-search="true"
+             :label="__('Model *')"
+             :placeholder="__('Select model')"
+             :values="$modelsArray"
+/>
 ```
 
-## Изменения
+Если у Вас небольшое количество опций для выбора, установите `:hide-search="true"`, чтобы отключить функциональность поисковой строки.
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+### Продвинутое использование с внешней функцией поиска и слотом
+
+Компонент может обновлять значения при вводе пользователем текста, с которым должны совпадать допустимые значения выбора: 
+
+```bladehtml
+<x-ui.select wire:model="modelId"
+             :values="$modelsArray"
+             :hidden="$createNewProvider"
+             :label="__('Model *')"
+             :placeholder="__('Select model')"
+             search-function="searchModels"
+             :total-values="$totalModels"
+>
+    <x-slot:control>
+        В этот slot можно передать любую вёрстку, 
+        в т.ч. управляемые Livewire компоненты, 
+        такие как toggle
+    </x-slot:control>
+</x-ui.select>
+```
+
+Пример функции поиска, расположенной в родительском Livewire-компоненте:
+
+```php 
+public function searchModels(string $search, string $selectedValueId): array
+{
+    $query = Model::query();
+
+    if (!empty($search)) {
+        $query
+        ->where('company_name', 'like', "%$search%")
+        ->orWhere('id', '=', "$selectedValueId");
+    }
+
+    return $query
+        ->orderBy('company_name')
+        ->get()
+        ->mapWithKeys(function (Provider $provider) {
+            return [$provider->id => $provider->company_name];
+        })
+        ->toArray();
+}
+```
 
 ## Авторы
 
