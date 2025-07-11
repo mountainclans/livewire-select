@@ -15,12 +15,10 @@
             $name = $value;
         }
     }
-
-    $placeholderKey = is_string(array_keys($values)[0]) ? "" : 0;
 @endphp
 
 
-<div x-data="selectComponent(@js($placeholder ? ([$placeholderKey => $placeholder] + $values) : $values), '{{ $searchFunction }}')"
+<div x-data="selectComponent(@js($placeholder ? array_merge(['' => $placeholder], $values) : $values), '{{ $searchFunction }}')"
      x-init="init()"
      x-on:keydown="handleKeydown($event)"
      x-cloak
@@ -43,7 +41,7 @@
             id="{{ $name }}"
         {{ $attributes->except(['class']) }}
     >
-        <option value="{{ $placeholderKey }}">{{ $placeholder }}</option>
+        <option value="">{{ $placeholder }}</option>
 
         @foreach ($values as $key => $value)
             <option value="{{ $key }}">{{ $value }}</option>
@@ -63,7 +61,7 @@
         >
 			<span x-text="selectedLabel ? selectedLabel : '{{ $placeholder }}'"
                   x-bind:class="{
-                    '!font-normal text-gray-400': selectedKey == -1 || selectedKey == '{{ $placeholderKey }}'
+                    '!font-normal text-gray-400': selectedKey == -1
                   }"
             ></span>
         </div>
@@ -109,7 +107,7 @@
                         :class="{
                             'p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-gray-100 select-none': true,
                             'bg-blue-500 dark:bg-blue-800 text-white': selectedKey === item[0],
-                            '!text-gray-400': '{{ $placeholderKey }}' == item[0]
+                            '!text-gray-400': '' === item[0]
                         }"
                     >
                         <span x-text="item[1]"></span>
