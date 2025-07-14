@@ -1,6 +1,7 @@
 export default function selectComponent(
     values,
-    searchFunction = false
+    searchFunction = false,
+    model
 ) {
     return {
         open: false,
@@ -12,6 +13,7 @@ export default function selectComponent(
         filteredOptions: values,
         filteredOptionsLength: 0,
         total: -1,
+        model,
 
         toggle() {
             this.open = !this.open;
@@ -25,11 +27,12 @@ export default function selectComponent(
         },
 
         selectOption(value, label) {
-            this.selectedLabel = label;
-            this.$refs.hiddenSelect.value = value;
-            this.$refs.hiddenSelect.dispatchEvent(new Event('change'));
+            const isEmptyValue = (value === '' || value === null);
+
+            this.selectedKey = isEmptyValue ? -1 : value;
+            this.selectedLabel = isEmptyValue ? '' : label;
+            this.model = value;
             this.open = false;
-            this.selectedKey = value ? value : -1;
         },
 
         handleKeydown(e) {
@@ -60,7 +63,7 @@ export default function selectComponent(
             }
 
             if (searchFunction) {
-                const response = await this.$wire[searchFunction](this.search, this.$refs.hiddenSelect.value);
+                const response = await this.$wire[searchFunction](this.search, this.model);
                 this.$nextTick(() => {
                     this.filteredOptions = response;
                     this.filteredOptionsLength = Object.keys(response).length.toString();
@@ -69,19 +72,25 @@ export default function selectComponent(
             } else {
                 this.filteredOptions = Object.fromEntries(
                     Object.entries(this.options).filter(([key, value]) => {
-                        return value.toLowerCase().includes(this.search.toLowerCase()) || this.$refs.hiddenSelect.value == key;
+                        return value.toLowerCase().includes(this.search.toLowerCase()) || this.model == key;
                     })
                 );
             }
         },
 
+        updateSelectedFromModel() {
+            const value = this.model;
+            const isEmptyValue = (value === '' || value === null);
+
+            this.selectedKey = isEmptyValue ? -1 : value;
+            this.selectedLabel = this.options[value] || '';
+        },
+
         init() {
-            this.$nextTick(() => {
-                const selectEl = this.$refs.hiddenSelect;
-                if (selectEl.value && this.options[selectEl.value]) {
-                    this.selectedLabel = this.options[selectEl.value];
-                    this.selectedKey = selectEl.value;
-                }
+            this.updateSelectedFromModel();
+
+            this.$watch('model', () => {
+                this.updateSelectedFromModel();
             });
         }
     };

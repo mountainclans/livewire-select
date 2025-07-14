@@ -15,10 +15,12 @@
             $name = $value;
         }
     }
+
+    $valuesWithPlaceholder = $placeholder ? ['' => $placeholder] + $values : $values;
 @endphp
 
 
-<div x-data="selectComponent(@js($placeholder ? array_merge(['' => $placeholder], $values) : $values), '{{ $searchFunction }}')"
+<div x-data="selectComponent(@js($valuesWithPlaceholder), '{{ $searchFunction }}', @entangle($name))"
      x-init="init()"
      x-on:keydown="handleKeydown($event)"
      x-cloak
@@ -36,18 +38,6 @@
         </div>
     @endif
 
-    <select x-ref="hiddenSelect"
-            hidden
-            id="{{ $name }}"
-        {{ $attributes->except(['class']) }}
-    >
-        <option value="">{{ $placeholder }}</option>
-
-        @foreach ($values as $key => $value)
-            <option value="{{ $key }}">{{ $value }}</option>
-        @endforeach
-    </select>
-
     <div @click.away="open = false"
         @class([
             'w-full',
@@ -61,7 +51,7 @@
         >
 			<span x-text="selectedLabel ? selectedLabel : '{{ $placeholder }}'"
                   x-bind:class="{
-                    '!font-normal text-gray-400': selectedKey == -1
+                    '!font-normal !text-gray-400': selectedKey == -1
                   }"
             ></span>
         </div>
