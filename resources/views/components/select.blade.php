@@ -46,12 +46,15 @@
     >
         <div tabindex="0"
              x-ref="selectBox"
-             @click="toggle()"
+             x-on:click="{{ $attributes->has('disabled') ? 'null' : 'toggle()' }}"
              class="imitate-select border border-gray-300 text-gray-600 dark:text-white font-bold rounded-lg focus:ring-blue-300 dark:focus:ring-blue-500 focus:border-blue-500 block w-full p-3 cursor-pointer bg-gray-50 dark:bg-gray-600 dark:border-gray-500 text-sm select-none"
+             x-bind:class="{
+                '!border-dashed': {{ $attributes->has('disabled') ? 1 : 0 }}
+             }"
         >
 			<span x-text="selectedLabel ? selectedLabel : '{{ $placeholder }}'"
                   x-bind:class="{
-                    '!font-normal !text-gray-400': selectedKey == -1
+                    '!font-normal !text-gray-400': selectedKey == -1 || {{ $attributes->has('disabled') ? 1 : 0 }}
                   }"
             ></span>
         </div>
