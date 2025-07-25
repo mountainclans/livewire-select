@@ -2,6 +2,10 @@
 
 All notable changes to `livewire-select` will be documented in this file.
 
+## 1.2.2 - 2025-07-14
+
+Restore disabled select functionality
+
 ## 1.1.2 - 2025-07-14
 
 Using @entangle instead of hiddenSelect
