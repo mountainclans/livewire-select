@@ -92,16 +92,17 @@
                 </template>
             </div>
 
-            <template x-if="{{
-                empty($totalValues) ? 'false' : $totalValues }}
-                && {{ empty($totalValues) ? 0 : $totalValues }} > filteredOptions.length
-            ">
+            <template x-if="filteredOptionsLength < totalOptionsLength">
                 <div class="text-sm text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-700 italic px-3 pb-1">
                     {{ __('Show') }}
 
-                    <span x-text="filteredOptions.length > 0 ? filteredOptions.length : defaultOptionsLength"></span>
+                    <span x-text="filteredOptionsLength"></span>
 
-                    {{ __('of :total. Use search input for select another values.', ['total' => $totalValues]) }}
+                    {{ __(' of ') }}
+
+                    <span x-text="totalOptionsLength"></span>
+
+                    {{ __('. Use search input for select another values.', ['total' => $totalValues]) }}
                 </div>
             </template>
 
