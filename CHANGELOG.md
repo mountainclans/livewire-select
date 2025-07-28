@@ -2,6 +2,10 @@
 
 All notable changes to `livewire-select` will be documented in this file.
 
+## 1.3.0 - 2025-07-28
+
+Reactivity update using the old component signature
+
 ## 1.2.2 - 2025-07-14
 
 Restore disabled select functionality
