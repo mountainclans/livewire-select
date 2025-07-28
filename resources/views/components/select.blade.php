@@ -10,21 +10,29 @@
 ])
 
 @php
+    $live = false;
+
     foreach ($attributes as $key => $value) {
         if (str_contains($key, 'wire:model')){
             $name = $value;
+
+            if (str_contains($key, 'wire:model.live')) {
+                $live = true;
+            }
         }
     }
-
-    $valuesWithPlaceholder = $placeholder ? ['' => $placeholder] + $values : $values;
 @endphp
 
-
-<div x-data="selectComponent(@js($valuesWithPlaceholder), '{{ $searchFunction }}', @entangle($name))"
-     x-init="init()"
+<div x-data="selectComponent(
+        @entangle($name),
+        '{{ $name }}',
+        {{ $live ? 'true' : 'false' }},
+        '{{ $searchFunction }}'
+     )"
+     x-init="$nextTick(() => init(@js($values)))"
      x-on:keydown="handleKeydown($event)"
      x-cloak
-     class="relative"
+     class="relative min-w-[80px]"
 >
     @if ($label)
         <div class="flex flex-wrap justify-between items-center">
@@ -84,21 +92,30 @@
                 </template>
             </div>
 
-            @if ($totalValues && $totalValues > count($values))
+            <template x-if="{{
+                empty($totalValues) ? 'false' : $totalValues }}
+                && {{ empty($totalValues) ? 0 : $totalValues }} > filteredOptions.length
+            ">
                 <div class="text-sm text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-700 italic px-3 pb-1">
                     {{ __('Show') }}
 
-                    <span x-text="filteredOptionsLength > 0 ? filteredOptionsLength : initialOptionsLength"></span>
+                    <span x-text="filteredOptions.length > 0 ? filteredOptions.length : defaultOptionsLength"></span>
 
                     {{ __('of :total. Use search input for select another values.', ['total' => $totalValues]) }}
                 </div>
-            @endif
+            </template>
 
             <ul class="max-h-60 overflow-auto bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white text-sm">
-                <template x-for="(item, index) in Object.entries(filteredOptions)" :key="item[0]">
+                @if ($placeholder)
+                    <li @click="selectOption('', '{{ $placeholder }}')"
+                        class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-gray-100 select-none !text-gray-400"
+                    >{{ $placeholder }}</li>
+                @endif
+
+                <template x-for="(item, index) in safeOptions" :key="item[0]">
                     <li @click="selectOption(item[0], item[1])"
+                        class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-gray-100 select-none"
                         :class="{
-                            'p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-gray-100 select-none': true,
                             'bg-blue-500 dark:bg-blue-800 text-white': selectedKey === item[0],
                             '!text-gray-400': '' === item[0]
                         }"
@@ -106,6 +123,7 @@
                         <span x-text="item[1]"></span>
                     </li>
                 </template>
+
             </ul>
         </div>
     </div>

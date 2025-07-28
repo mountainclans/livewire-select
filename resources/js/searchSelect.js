@@ -1,19 +1,28 @@
 export default function selectComponent(
-    values,
-    searchFunction = false,
-    model
+    model,
+    fieldName,
+    live,
+    searchFunction = false
 ) {
     return {
+        renderKey: 0,
         open: false,
         search: '',
         selectedLabel: '',
         selectedKey: -1,
-        options: values,
-        initialOptionsLength: Object.keys(values).length,
-        filteredOptions: values,
+        options: {},
+        defaultOptions: {},
+        defaultOptionsLength: 0,
+        filteredOptions: {},
         filteredOptionsLength: 0,
         total: -1,
         model,
+        fieldName,
+        live,
+
+        get safeOptions() {
+            return Object.entries(this.filteredOptions);
+        },
 
         toggle() {
             this.open = !this.open;
@@ -33,6 +42,12 @@ export default function selectComponent(
             this.selectedLabel = isEmptyValue ? '' : label;
             this.model = value;
             this.open = false;
+
+            if (this.live) {
+                this.$nextTick(async () => {
+                    await this.$wire.set(this.fieldName, value);
+                });
+            }
         },
 
         handleKeydown(e) {
@@ -51,13 +66,12 @@ export default function selectComponent(
 
         clearSearch() {
             this.search = '';
-            this.filteredOptions = this.options;
-            this.filteredOptionsLength = 0;
+            this.filteredOptions = this.defaultOptions;
             this.total = -1;
         },
 
         async updateSearch() {
-            if ('' === this.search) {
+            if (!this.search.length) {
                 this.clearSearch();
                 return;
             }
@@ -66,7 +80,6 @@ export default function selectComponent(
                 const response = await this.$wire[searchFunction](this.search, this.model);
                 this.$nextTick(() => {
                     this.filteredOptions = response;
-                    this.filteredOptionsLength = Object.keys(response).length.toString();
                     this.total = response.total;
                 });
             } else {
@@ -86,7 +99,16 @@ export default function selectComponent(
             this.selectedLabel = this.options[value] || '';
         },
 
-        init() {
+        init(values) {
+            if (values === undefined) return;
+
+            this.options = values;
+            this.defaultOptions = values;
+            this.filteredOptions = values;
+            this.filteredOptionsLength = Object.keys(values).length;
+            this.defaultOptionsLength = Object.keys(values).length;
+
+            this.updateSearch(); // todo посмотреть на оптимизацию этого элемента, т.к. сейчас делается доп запрос при обновлении с бэкенда
             this.updateSelectedFromModel();
 
             this.$watch('model', () => {
