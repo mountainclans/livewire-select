@@ -2,6 +2,10 @@
 
 All notable changes to `livewire-select` will be documented in this file.
 
+## 1.5.0 - 2026-09-29
+
+Support Livewire 4
+
 ## 1.4.0 - 2026-06-23
 
 Support PHP 8.5 + Laravel 13; added smoke tests
