@@ -115,9 +115,10 @@
 
                 <template x-for="(item, index) in safeOptions" :key="item[0]">
                     <li @click="selectOption(item[0], item[1])"
-                        class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-gray-100 select-none"
+                        class="p-2 cursor-pointer select-none"
                         :class="{
                             'bg-blue-500 dark:bg-blue-800 text-white': selectedKey === item[0],
+                            'hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-gray-100': selectedKey !== item[0],
                             '!text-gray-400': '' === item[0]
                         }"
                     >
