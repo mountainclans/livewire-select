@@ -68,10 +68,10 @@
         </div>
 
         <div x-show="open"
-             class="absolute z-10 w-full mt-1 bg-gray-400 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-lg shadow-lg select-none overflow-auto max-h-[300px]"
+             class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-lg shadow-lg select-none overflow-auto max-h-[300px]"
         >
             <div @class([
-                'bg-gray-200 dark:bg-gray-700 p-3 relative',
+                'bg-gray-50 dark:bg-gray-700 p-3 relative border-b border-gray-200 dark:border-gray-600',
                 'hidden' => $hideSearch,
             ])>
                 <input type="text"
@@ -93,7 +93,7 @@
             </div>
 
             <template x-if="filteredOptionsLength < totalOptionsLength">
-                <div class="text-sm text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-700 italic px-3 pb-1">
+                <div class="text-sm text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 italic px-3 pb-1">
                     {{ __('Show') }}
 
                     <span x-text="filteredOptionsLength"></span>
@@ -106,7 +106,7 @@
                 </div>
             </template>
 
-            <ul class="max-h-60 overflow-auto bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white text-sm">
+            <ul class="max-h-60 overflow-auto bg-white dark:bg-gray-600 text-gray-800 dark:text-white text-sm">
                 @if ($placeholder)
                     <li @click="selectOption('', '{{ $placeholder }}')"
                         class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-gray-100 select-none !text-gray-400"
