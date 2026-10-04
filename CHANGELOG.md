@@ -2,6 +2,11 @@
 
 All notable changes to `livewire-select` will be documented in this file.
 
+## 1.5.1 - 2026-10-04
+
+- Light option list in the light theme: the dropdown, its search area and the options no longer have gray backgrounds. The dark theme is unchanged.
+- The selected option keeps its blue background on hover.
+
 ## 1.5.0 - 2026-09-29
 
 Support Livewire 4
